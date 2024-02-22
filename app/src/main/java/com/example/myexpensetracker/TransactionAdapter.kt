@@ -1,0 +1,45 @@
+package com.example.myexpensetracker
+
+import android.view.LayoutInflater
+import androidx.recyclerview.widget.RecyclerView
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+
+class TransactionAdapter(private var transactions: List<Transaction>) : RecyclerView.Adapter<TransactionAdapter.TansactionHolder>() {
+    class TansactionHolder(view: View) : RecyclerView.ViewHolder(view){
+        val lable: TextView = view.findViewById(R.id.label)
+        val amount: TextView = view.findViewById(R.id.amount)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TansactionHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.transaction_layout, parent, false)
+        return TansactionHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: TansactionHolder, position: Int) {
+        val transaction = transactions[position]
+        val context = holder.amount.context
+        if(transaction.amount >=0) {
+            holder.amount.text = "+ ₹%.2f".format(transaction.amount)
+            holder.amount.setTextColor(ContextCompat.getColor(context, R.color.green))
+        }
+        else{
+            holder.amount.text = "- ₹%.2f".format(transaction.amount*(-1))
+            holder.amount.setTextColor(ContextCompat.getColor(context, R.color.red))
+        }
+
+        holder.lable.text = transaction.label
+    }
+
+    override fun getItemCount(): Int {
+        return transactions.size
+    }
+    fun setData(transactions: List<Transaction>) {
+        this.transactions = transactions
+        notifyDataSetChanged()
+    }
+
+
+}
